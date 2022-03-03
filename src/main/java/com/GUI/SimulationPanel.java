@@ -43,6 +43,8 @@ public class SimulationPanel extends JPanel implements ActionListener{
     }
 
 
+    // Processos da simulação -------------------------- //
+
     @Override
     public void actionPerformed(ActionEvent e) {
         update();
@@ -52,12 +54,10 @@ public class SimulationPanel extends JPanel implements ActionListener{
     public void update() {
         w.passADay();
 
-        for (int i=0; i< w.organisms.size(); i++) {
+        for (int i=0; i< w.organisms.size(); i++)
             w.organisms.get(i).simulate();
-        }
 
         w.organisms.removeIf(o -> o.getCharac().is(Status.DEAD) || o.getCharac().is(Status.EATEN));
-        Panels.instance.dataPanel.updateData();
         this.printTable();
     }
 

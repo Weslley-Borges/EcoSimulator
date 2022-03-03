@@ -23,16 +23,16 @@ public class Plant extends Organism {
 		if (pos.x < 0 || pos.x >= w.simulationWidth || pos.y < 0 || pos.y >= w.simulationHeight)
 			this.charac.addStatus(Status.DEAD);
 
-		if (this.charac.is(Status.DEAD) || this.charac.is(Status.EATEN)) return;
+		if (!this.charac.is(Status.DEAD) && !this.charac.is(Status.EATEN)) {
+			this.passADay();
+			this.charac.setBreedUrge(this.charac.getBreedUrge() + 1);
+			this.breed();
 
-		this.passADay();
-		this.charac.setBreedUrge(this.charac.getBreedUrge() + 1);
-		this.breed();
-
-		for (int i=0; i < w.organisms.size(); i++) {
-			Organism o = w.organisms.get(i);
-			if (o.getSpecies()==this.species && o!=this && o.getPosition().distance(this.position) == 0)
-				o.getCharac().addStatus(Status.DEAD);
+			for (int i=0; i < w.organisms.size(); i++) {
+				Organism o = w.organisms.get(i);
+				if (o.getSpecies()==this.species && o!=this && o.getPosition().distance(this.position) == 0)
+					o.getCharac().addStatus(Status.DEAD);
+			}
 		}
 	}
 

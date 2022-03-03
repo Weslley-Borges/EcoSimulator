@@ -1,9 +1,10 @@
 package com.entities;
-
 import com.interfaces.Status;
 import com.models.Organism;
 import com.models.Species;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -21,61 +22,44 @@ public class Animal extends Organism {
 
 	public void simulate() {
 		if (this.charac.is(Status.DEAD) || this.charac.is(Status.EATEN)) return;
-		this.passADay();
 
+		this.passADay();
 		this.move();
+		this.preventPredator();
 		this.checkHunger();
 		this.checkPregnancy();
 		this.eat();
 		this.breed();
-		this.preventPredator();
-
-		if (
-		  this.charac.is(Status.PREGNANT) &&
-			this.charac.getDaysPregnant() >= this.charac.getPregnancyDuration()
-		) {
-			w.organisms.add(new Animal(this));
-			this.charac.removeStatus(Status.PREGNANT);
-			this.charac.setDaysPregnant(0);
-			this.charac.setDaysToNextBreed(this.charac.getDaysToNextBreed() + this.charac.getTimeBetweenBreeds());
-		}
+		this.born();
 	}
 
 
 	// Movimentação ----------------------------------------------
 
 	public void move() {
-		int tileSize = w.tileSize, speed = this.charac.getSpeed();
-		Point me = this.position;
+		int speed = this.charac.getSpeed();
+		this.position.x += w.random.nextInt(-speed, speed + 1) * w.tileSize;
+		this.position.y += w.random.nextInt(-speed, speed + 1) * w.tileSize;
 
-
-		me.x += w.random.nextInt(-speed, speed + 1) * tileSize;
-		me.y += w.random.nextInt(-speed, speed + 1) * tileSize;
-
-
-		if (me.x < 0) me.x = 0;
-		else if (me.x >= w.simulationWidth)
-			me.x = w.simulationWidth - tileSize;
-
-		if (me.y < 0) me.y = 0;
-		else if (me.y >= w.simulationHeight)
-			me.y = w.simulationHeight - tileSize;
-
+		this.putOnScreen();
 		this.charac.setHunger(this.charac.getHunger() + this.charac.getHungerIncrease());
+	}
+	public void putOnScreen() {
+		if (this.position.x < 0) this.position.x = 0;
+		else if (this.position.x >= w.simulationWidth)
+			this.position.x = w.simulationWidth - w.tileSize;
+
+		if (this.position.y < 0) this.position.y = 0;
+		else if (this.position.y >= w.simulationHeight)
+			this.position.y = w.simulationHeight - w.tileSize;
 	}
 
 	private void moveTo(Point to) {
 		Point from = this.position;
-
-		if (from.x > to.x)
-			from.x -= w.tileSize * this.charac.getSpeed();
-		else if (from.x < to.x)
-			from.x += w.tileSize * this.charac.getSpeed();
-
-		if (from.y > to.y)
-			from.y -= w.tileSize * this.charac.getSpeed();
-		else if (from.y < to.y)
-			from.y += w.tileSize * this.charac.getSpeed();
+		int deltaX = to.x - from.x;
+		int deltaY = to.y - from.y;
+		from.x += deltaX;
+		from.y += deltaY;
 	}
 
 	public void runAway(Point from) {
@@ -123,13 +107,22 @@ public class Animal extends Organism {
 		  .filter(r -> ((Animal) r).canBreed(((Animal) r), this))
 		  .toList();
 
-		return (Animal) this.getClosestEntity(this, canBreed);
+		return (Animal) this.getClosestEntity(canBreed);
 	}
 
 	public Boolean canBreed(Animal a1, Animal a2) {
 		Boolean isFemaleAndIsNotPregnant =
 		  a1.charac.getGender() != a2.charac.getGender() && !a1.charac.is(Status.PREGNANT);
 		return isFemaleAndIsNotPregnant && a1.charac.isBiologicallyAlready();
+	}
+
+	public void born() {
+		if (this.charac.is(Status.PREGNANT) && this.charac.getDaysPregnant() >= this.charac.getPregnancyDuration()) {
+			w.organisms.add(new Animal(this));
+			this.charac.removeStatus(Status.PREGNANT);
+			this.charac.setDaysPregnant(0);
+			this.charac.setDaysToNextBreed(this.charac.getDaysToNextBreed() + this.charac.getTimeBetweenBreeds());
+		}
 	}
 
 
@@ -141,7 +134,7 @@ public class Animal extends Organism {
 		  .toList();
 
 		if (preys.size() == 0) return;
-		Organism closest = this.getClosestEntity(this, preys);
+		Organism closest = this.getClosestEntity(preys);
 		if (closest == null) return;
 
 		if (
@@ -160,7 +153,7 @@ public class Animal extends Organism {
 		  .toList();
 
 		if (predators.size() > 0) {
-			Organism closest = this.getClosestEntity(this, predators);
+			Organism closest = this.getClosestEntity(predators);
 			if (closest != null)
 				this.runAway(closest.getPosition());
 		}
@@ -174,6 +167,13 @@ public class Animal extends Organism {
 			this.moveTo(entity.getPosition());
 
 		return this.position.distance(entity.getPosition()) <= w.tileSize;
+	}
+
+	public <T extends Organism> T getClosestEntity(List<T> entities) {
+		List<T> modifiableList = new ArrayList<>(entities);
+		modifiableList.sort(Comparator.comparing(e -> e.getDistance(this)));
+
+		return (modifiableList.size() == 0) ? null : modifiableList.get(0);
 	}
 
 	public void checkHunger() {

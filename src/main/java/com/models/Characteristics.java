@@ -20,25 +20,18 @@ public class Characteristics {
 	protected List<Status> status = new ArrayList<>();
 
 	@SneakyThrows
-	public Characteristics(
-	  int range,
-	  int lifeSpeculative,
-	  int speed,
-	  int maxChildrenPerTime,
-	  int pregnancyDuration,
-	  BufferedImage image) {
-		this.range = range;
+	public Characteristics(int range, int lifeSpec, int speed, int maxCPerTime, int pregDuration, BufferedImage img) {
 		this.gender = (new Random().nextInt(100) > 50) ? 'F': 'M';
+		this.lifeSpeculative = lifeSpec  * 360;
+		this.pregnancyDuration = pregDuration;
+		this.maxChildrenPerTime = maxCPerTime;
 		this.addStatus(Status.NORMAL);
-		this.lifeSpeculative = lifeSpeculative  * 360;
+		this.range = range;
 		this.speed = speed;
-		this.maxChildrenPerTime = maxChildrenPerTime;
-		this.pregnancyDuration = pregnancyDuration;
-		this.image = image;
+		this.image = img;
 	}
 
 
-	// Status ------------------------------------
 	public Boolean is(Status status) {
 		return this.status.contains(status);
 	}

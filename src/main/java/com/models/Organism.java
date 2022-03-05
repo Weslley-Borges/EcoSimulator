@@ -14,8 +14,7 @@ public abstract class Organism implements IOrganism {
 	protected Characteristics charac;
 	protected WorldData w = WorldData.getInstance();
 	protected Point position = new Point(0,0);
-
-
+	
 	public void passADay() {
 		this.charac.setDaysAlive(this.charac.getDaysAlive() + 1);
 		if (this.charac.getDaysAlive() >= this.charac.getLifeSpeculative())

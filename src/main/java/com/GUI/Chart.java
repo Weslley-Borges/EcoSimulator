@@ -6,8 +6,6 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import java.awt.event.*;
-
 
 public class Chart extends JFrame {
 	public Chart(String title, int[][] data) {

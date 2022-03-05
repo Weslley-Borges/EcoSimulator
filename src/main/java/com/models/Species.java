@@ -17,21 +17,14 @@ public class Species {
 	private List<Species> preys = new ArrayList<>();
 
 	@SneakyThrows
-	public Species(
-	  int range,
-	  int lifeSpeculative,
-	  int speed,
-	  int maxChildrenPerTime,
-	  int pregnancyDuration,
-	  String imagePath
-	) {
+	public Species(int range, int lifeSpec, int speed, int maxCPerTime, int pregDuration, String imgPath) {
 		speciesCharac = new Characteristics(
 		  range,
-		  lifeSpeculative,
+		  lifeSpec,
 		  speed,
-		  maxChildrenPerTime,
-		  pregnancyDuration,
-		  ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)))
+		  maxCPerTime,
+		  pregDuration,
+		  ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(imgPath)))
 		);
 	}
 

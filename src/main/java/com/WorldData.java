@@ -15,6 +15,7 @@ public class WorldData {
 	public Random random = new Random();
 	public int days = 1;
 	public int delay = 70;
+	public int[][] data;
 
 	// Escala
 	public final int scale = 2;
@@ -29,9 +30,9 @@ public class WorldData {
 
 	// Lista de organismos e espécies
 	public List<Organism> organisms = new ArrayList<>();
-	public Species fox = new Species(1, 6, 13, 60, 50, 1, 4, 63, "/sprites/fox.png");
-	public Species rabbit = new Species(1, 4, 10, 5, 30, 1, 14, 60, "/sprites/rabbit.png");
-	public Species grass = new Species(1, 4, 1, 0, 0, 0, 1, 0,"/sprites/grass.png");
+	public Species fox = new Species(6, 13, 1, 4, 30, "/sprites/fox.png");
+	public Species rabbit = new Species(4, 10, 1, 14, 40, "/sprites/rabbit.png");
+	public Species grass = new Species(4, 1, 0, 1, 0,"/sprites/grass.png");
 
 	{
 		fox.setPreys(new ArrayList<>(List.of(rabbit)));
@@ -50,7 +51,6 @@ public class WorldData {
 		pos.y = this.random.nextInt(this.simulationHeight/this.tileSize) * this.tileSize;
 		return pos;
 	}
-
 	public void passADay() {
 		this.days++;
 	}

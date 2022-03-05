@@ -11,6 +11,7 @@ import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 
 public class SimulationPanel extends JPanel implements ActionListener{
     WorldData w = WorldData.getInstance();
+    int simulationDays;
     Timer timer;
 
     public SimulationPanel() {
@@ -25,13 +27,17 @@ public class SimulationPanel extends JPanel implements ActionListener{
         this.setBackground(new Color(135, 68, 36));
         this.setDoubleBuffered(true);
 
+        simulationDays = Integer.parseInt(JOptionPane.showInputDialog("Quantos dias de simulação?"));
         int grassOrganisms = Integer.parseInt(JOptionPane.showInputDialog("Quanta grama?"));
         int rabbitOrganisms = Integer.parseInt(JOptionPane.showInputDialog("Quantos coelhos?"));
-        int wolfOrganisms = Integer.parseInt(JOptionPane.showInputDialog("Quantas raposas?"));
+        int foxOrganisms = Integer.parseInt(JOptionPane.showInputDialog("Quantas raposas?"));
+
+        w.data = new int[simulationDays][2];
+        w.data[0] = new int[]{foxOrganisms, rabbitOrganisms};
 
         for (int i=0; i<grassOrganisms; i++) w.organisms.add(new Plant(w.grass));
         for (int i=0; i<rabbitOrganisms; i++) w.organisms.add(new Animal(w.rabbit));
-        for (int i=0; i<wolfOrganisms; i++) w.organisms.add(new Animal(w.fox));
+        for (int i=0; i<foxOrganisms; i++) w.organisms.add(new Animal(w.fox));
     }
 
     public void startGame() {
@@ -79,12 +85,18 @@ public class SimulationPanel extends JPanel implements ActionListener{
 
     @SneakyThrows
     public void printTable() {
+        int grasses = (int) w.organisms.stream().filter(o -> o.getSpecies() == w.grass).count();
+        int foxes = (int) w.organisms.stream().filter(o -> o.getSpecies() == w.fox).count();
+        int rabbits = (int) w.organisms.stream().filter(o -> o.getSpecies() == w.rabbit).count();
+
         String[][] table = new String[][] {
           { "Specie", "Organisms"},
-          { "Grama", Integer.toString((int) w.organisms.stream().filter(o -> o.getSpecies() == w.grass).count())},
-          { "Raposa", Integer.toString((int) w.organisms.stream().filter(o -> o.getSpecies() == w.fox).count()) },
-          { "Coelho", Integer.toString((int) w.organisms.stream().filter(o -> o.getSpecies() == w.rabbit).count())}
+          { "Grama", Integer.toString(grasses)},
+          { "Raposa", Integer.toString(foxes) },
+          { "Coelho", Integer.toString(rabbits)}
         };
+
+        w.data[w.days-1] = new int[]{foxes, rabbits};
 
 		// Calcula a largura apropriada para cada coluna, baseado no tamanho dos dados em
         // cada coluna.
@@ -106,5 +118,10 @@ public class SimulationPanel extends JPanel implements ActionListener{
           .iterate(0, (i -> i < table.length), (i -> ++i))
           .forEach(a -> System.out.printf(formatString.toString(), table[a]));
         System.out.println("\n");
+
+        if (simulationDays == w.days) {
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispatchEvent(new WindowEvent(topFrame, WindowEvent.WINDOW_CLOSING));
+        }
     }
 }

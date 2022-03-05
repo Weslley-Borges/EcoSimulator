@@ -42,8 +42,9 @@ public class Animal extends Organism {
 		this.position.y += w.random.nextInt(-speed, speed + 1) * w.tileSize;
 
 		this.putOnScreen();
-		this.charac.setHunger(this.charac.getHunger() + this.charac.getHungerIncrease());
+		this.charac.setHunger(this.charac.getHunger() + 1);
 	}
+
 	public void putOnScreen() {
 		if (this.position.x < 0) this.position.x = 0;
 		else if (this.position.x >= w.simulationWidth)
@@ -81,6 +82,8 @@ public class Animal extends Organism {
 
 	// Reprodução -----------------------------------------------------
 	public void breed() {
+		if (this.charac.is(Status.HUNGRY)) return;
+
 		Animal couple = this.searchPartner();
 		if (couple == null) return;
 
@@ -90,16 +93,15 @@ public class Animal extends Organism {
 				a.charac.setPregnantOf(children);
 				a.charac.setDaysPregnant(0);
 				a.charac.addStatus(Status.PREGNANT);
-				a.charac.setDaysToNextBreed(a.charac.getDaysToNextBreed() + a.charac.getTimeBetweenBreeds());
 			}
+			a.charac.setHunger(a.charac.getHunger() + 10);
+
 		}
 
-		couple.charac.setBreedUrge(couple.charac.getBreedUrge() - 20);
-		this.charac.setBreedUrge(this.charac.getBreedUrge() - 20);
 	}
 
 	public Animal searchPartner() {
-		if (!this.charac.isBiologicallyAlready() || this.charac.is(Status.PREGNANT)) return null;
+		if (this.charac.is(Status.PREGNANT)) return null;
 
 		List<Organism> canBreed = w.organisms
 		  .stream()
@@ -111,9 +113,7 @@ public class Animal extends Organism {
 	}
 
 	public Boolean canBreed(Animal a1, Animal a2) {
-		Boolean isFemaleAndIsNotPregnant =
-		  a1.charac.getGender() != a2.charac.getGender() && !a1.charac.is(Status.PREGNANT);
-		return isFemaleAndIsNotPregnant && a1.charac.isBiologicallyAlready();
+		return a1.charac.getGender() != a2.charac.getGender() && !a1.charac.is(Status.PREGNANT);
 	}
 
 	public void born() {
@@ -121,7 +121,6 @@ public class Animal extends Organism {
 			w.organisms.add(new Animal(this));
 			this.charac.removeStatus(Status.PREGNANT);
 			this.charac.setDaysPregnant(0);
-			this.charac.setDaysToNextBreed(this.charac.getDaysToNextBreed() + this.charac.getTimeBetweenBreeds());
 		}
 	}
 
@@ -142,7 +141,7 @@ public class Animal extends Organism {
 			this.isClosely(closest) && this.charac.is(Status.HUNGRY)
 		) {
 			closest.getCharac().addStatus(Status.EATEN);
-			this.charac.setHunger(this.charac.getHunger() - 30);
+			this.charac.setHunger(this.charac.getHunger() - 10);
 		}
 	}
 
@@ -171,7 +170,7 @@ public class Animal extends Organism {
 
 	public <T extends Organism> T getClosestEntity(List<T> entities) {
 		List<T> modifiableList = new ArrayList<>(entities);
-		modifiableList.sort(Comparator.comparing(e -> e.getDistance(this)));
+		modifiableList.sort(Comparator.comparing(e -> e.getDistance(this.position)));
 
 		return (modifiableList.size() == 0) ? null : modifiableList.get(0);
 	}
@@ -191,14 +190,9 @@ public class Animal extends Organism {
 	}
 
 	public void checkPregnancy() {
-		if (!this.charac.is(Status.PREGNANT)) {
-			if (this.charac.getBreedUrge() < 100)
-				this.charac.setBreedUrge(this.charac.getBreedUrge() + 1);
-
-			if (this.charac.getDaysToNextBreed() > 0)
-				this.charac.setDaysToNextBreed(this.charac.getDaysToNextBreed() - 1);
-		} else
+		if (this.charac.is(Status.PREGNANT)) {
 			this.charac.setDaysPregnant(this.charac.getDaysPregnant() + 1);
+		}
 	}
 
 }

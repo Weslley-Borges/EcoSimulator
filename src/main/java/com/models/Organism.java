@@ -22,8 +22,8 @@ public abstract class Organism implements IOrganism {
 			this.charac.addStatus(Status.DEAD);
 	}
 
-	public <T extends Organism> int getDistance(T entity) {
-		return ((int) this.position.distance(entity.getPosition())) / w.tileSize;
+	public int getDistance(Point target) {
+		return ((int) this.position.distance(target)) / w.tileSize;
 	}
 
 	public void draw(Graphics2D g2) {

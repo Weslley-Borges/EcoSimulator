@@ -1,8 +1,9 @@
 package com;
 
+import com.GUI.Chart;
 import com.GUI.SimulationPanel;
 import javax.swing.*;
-import java.awt.*;
+import java.util.Arrays;
 
 
 public class Main extends JFrame {
@@ -28,8 +29,15 @@ public class Main extends JFrame {
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				simulationPanel.stopGame();
-				System.out.println("A simulação foi encerada");
-				System.exit(0);
+
+				SwingUtilities.invokeLater(() -> {
+					Chart example = new Chart("Line Chart Example", WorldData.getInstance().data);
+					example.setAlwaysOnTop(true);
+					example.pack();
+					example.setSize(600, 500);
+					example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+					example.setVisible(true);
+				});
 			}
 		});
 	}

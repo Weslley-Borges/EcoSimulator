@@ -37,7 +37,7 @@ public class Plant extends Organism {
 	}
 
 	public void breed() {
-		if (this.charac.getBreedUrge() < 30 || this.charac.getDaysAlive() < 60)
+		if (this.charac.getBreedUrge() < 30 || this.charac.getDaysAlive() < 30)
 			return;
 
 		int unit = w.tileSize;

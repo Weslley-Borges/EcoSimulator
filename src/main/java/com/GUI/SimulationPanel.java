@@ -32,8 +32,8 @@ public class SimulationPanel extends JPanel implements ActionListener{
         int rabbitOrganisms = Integer.parseInt(JOptionPane.showInputDialog("Quantos coelhos?"));
         int foxOrganisms = Integer.parseInt(JOptionPane.showInputDialog("Quantas raposas?"));
 
-        w.data = new int[simulationDays][2];
-        w.data[0] = new int[]{foxOrganisms, rabbitOrganisms};
+        w.data = new int[simulationDays][3];
+        w.data[0] = new int[]{foxOrganisms, rabbitOrganisms, grassOrganisms};
 
         for (int i=0; i<grassOrganisms; i++) w.organisms.add(new Plant(w.grass));
         for (int i=0; i<rabbitOrganisms; i++) w.organisms.add(new Animal(w.rabbit));
@@ -96,7 +96,7 @@ public class SimulationPanel extends JPanel implements ActionListener{
           { "Coelho", Integer.toString(rabbits)}
         };
 
-        w.data[w.days-1] = new int[]{foxes, rabbits};
+        w.data[w.days-1] = new int[]{foxes, rabbits, grasses};
 
 		// Calcula a largura apropriada para cada coluna, baseado no tamanho dos dados em
         // cada coluna.

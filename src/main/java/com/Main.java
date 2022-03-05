@@ -14,7 +14,7 @@ public class Main extends JFrame {
 	public Main() {
 		SimulationPanel simulationPanel = new SimulationPanel();
 
-		this.setTitle("EcologyGame");
+		this.setTitle("EcoSimulator");
 		this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		this.setResizable(false);
 
@@ -31,7 +31,7 @@ public class Main extends JFrame {
 				simulationPanel.stopGame();
 
 				SwingUtilities.invokeLater(() -> {
-					Chart example = new Chart("Line Chart Example", WorldData.getInstance().data);
+					Chart example = new Chart("EcoSimulator", WorldData.getInstance().data);
 					example.setAlwaysOnTop(true);
 					example.pack();
 					example.setSize(600, 500);

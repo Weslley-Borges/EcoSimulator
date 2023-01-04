@@ -5,50 +5,89 @@
 
 package ecosimulator;
 
+import com.jakewharton.fliptables.FlipTable;
+import ecosimulator.entities.Organism;
+import ecosimulator.entities.Population;
+import ecosimulator.helpers.SpeciesBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class App {
-  static Organism[] organisms = new Organism[100];
-  static Random rn = new Random();
-
   public static void main(String[] args) {
     SpeciesBuilder speciesBuilder = new SpeciesBuilder();
+    List<Population> populations = new ArrayList<>();
+    Random rn = new Random();
 
+    speciesBuilder.getSpecies().forEach(specie -> {
+      // Os primeiros organismos são colocados
+
+      Population population = new Population(specie.getSpecieName());
+
+      for (int i=0; i < specie.getInitialAmount(); i++)
+        population.addIndividual(new Organism(specie));
+
+      populations.add(population);
+
+      // Os organismos se reproduzem, causando a diversificação genética
+
+      for (int i=0; i < specie.getInitialAmount() * 10; i++) {
+        Organism parentOne = population.getIndividuals()
+                .get(rn.nextInt(population.getIndividuals().size()-1));
+        Organism parentTwo = population.getIndividuals()
+                .get(rn.nextInt(population.getIndividuals().size()-1));
+
+        while (parentTwo == parentOne)
+          parentTwo = population.getIndividuals().get(rn.nextInt(population.getIndividuals().size()-1));
+
+        population.getIndividuals().add(parentOne.breed(parentTwo));
+      }
+
+    });
+
+
+    populations.forEach(App::showTable);
+
+    /*
     for (int i=0; i < 10; i++)
-      organisms[i] = new Organism(speciesBuilder.getSpecies().get(0));
+      individual[i] = new Organism(speciesBuilder.getSpecies().get(0));
 
     for (int i = 10; i < 100; i++)
     {
-      Organism parentOne = organisms[rn.nextInt(i-1)];
-      Organism parentTwo = organisms[rn.nextInt(i-1)];
+      Organism parentOne = individual[rn.nextInt(i-1)];
+      Organism parentTwo = individual[rn.nextInt(i-1)];
 
       while (parentTwo == parentOne)
-        parentTwo = organisms[rn.nextInt(i-1)];
+        parentTwo = individual[rn.nextInt(i-1)];
 
-      organisms[i] = parentOne.breed(parentTwo);
+      individual[i] = parentOne.breed(parentTwo);
     }
-
-    showTable();
+    */
   }
 
-  public static void showTable() {
-    String leftAlignFormat = "| %-9d | %-5s | %-6s | %-9s | %-8f |%n";
+  public static void showTable(Population population) {
+    Organism individualExample = population.getIndividuals().get(0);
+    int columns = individualExample.getGenoma().getGenes().keySet().toArray().length;
 
-    System.out.format("+-----------+-------+-----------+------------+---------+%n");
-    System.out.format("| Genoma ID | Speed |   Sight   | Breed Urge | Fitness |%n");
-    System.out.format("+-----------+-------+-----------+------------+---------+%n");
+    String[] headers = new String[columns+1];
+    String[][] data = new String[population.getIndividuals().size()][columns+1];
 
-    for (int i = 0; i < organisms.length; i++)
-      System.out.format (
-              leftAlignFormat,
-              i+1,
-              organisms[i].genoma.getGeneSequenceString("Speed"),
-              organisms[i].genoma.getGeneSequenceString("Sight"),
-              organisms[i].genoma.getGeneSequenceString("Breed urge"),
-              organisms[i].genoma.getFitness()
-      );
+    for (int i=0; i < columns; i++) {
+      headers[i] = individualExample.getGenoma().getGenes().keySet().toArray()[i].toString();
+    }
+    headers[columns] = "Fitness";
 
-    System.out.format("+-----------+-------+-----------+------------+---------+%n");
+    for (int i=0; i < population.getIndividuals().size(); i++) {
+      Organism individual = population.getIndividuals().get(i);
+
+      for (int j=0; j < headers.length-1; j++) {
+        data[i][j] = individual.getGenoma().getGeneSequenceString(headers[j]);
+      }
+      data[i][columns] = ""+individual.getGenoma().getFitness();
+    }
+
+    System.out.println(FlipTable.of(headers, data));
   }
 
 }

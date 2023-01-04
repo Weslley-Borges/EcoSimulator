@@ -1,11 +1,15 @@
-package ecosimulator;
+package ecosimulator.helpers;
 
+import ecosimulator.entities.Specie;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class SpeciesBuilder {
   protected ArrayList<Specie> species = new ArrayList<>();

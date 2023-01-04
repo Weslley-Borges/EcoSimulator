@@ -1,0 +1,24 @@
+{
+  "species": [
+    {
+      "name": "Wolf",
+      "initial_amount": 10,
+      "lifespan": 30,
+      "genes": [
+        {"Speed": 4 },
+        {"Sight": 10 },
+        {"Breed urge": 5 }
+      ]
+    },
+    {
+      "name": "Rabbit",
+      "initial_amount": 100,
+      "lifespan": 15,
+      "genes": [
+        {"Speed": 6 },
+        {"Sight": 4 },
+        {"Breed urge": 10 }
+      ]
+    }
+  ]
+}

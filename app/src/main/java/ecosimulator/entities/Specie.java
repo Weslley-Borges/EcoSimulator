@@ -1,8 +1,8 @@
-package ecosimulator;
+package ecosimulator.entities;
 
 import java.util.Map;
 
-class Specie {
+public class Specie {
   private final String specieName;
   private final int initialAmount;
   private final int lifespan;

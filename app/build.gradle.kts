@@ -19,6 +19,7 @@ dependencies {
     // This dependency is used by the application.
     implementation("com.google.guava:guava:31.1-jre")
     implementation("com.googlecode.json-simple:json-simple:1.1.1")
+    implementation("com.jakewharton.fliptables:fliptables:1.1.0")
 }
 
 application {

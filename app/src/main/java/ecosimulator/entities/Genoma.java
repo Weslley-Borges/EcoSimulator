@@ -1,10 +1,10 @@
-package ecosimulator;
+package ecosimulator.entities;
 
 import java.util.*;
 
-class Genoma {
+public class Genoma {
     private float fitness = 0;
-    private Map<String, int[]> genes = new HashMap<>();
+    private final Map<String, int[]> genes = new HashMap<>();
 
     public Genoma(List<String> geneNames, List<Integer> valuesQuantities) {
         // Inserir os valores na sequência de cada gene (valores 1 ou 0, aleatoriamente).

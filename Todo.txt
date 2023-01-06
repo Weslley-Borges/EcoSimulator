@@ -1,0 +1,14 @@
+- Sistema de caça
+    - Algumas espécies vão predar outras
+    - As presas vão correr dos predadores
+    - Se a presa for alcançada, ela morre e vira alimento do predador
+
+- Fome
+    - A fome aumenta ao:
+        - Passar do tempo
+        - Se reproduzir
+        - Se movimentar
+
+- Gráficos e análise de dados
+    - Fitness ao passar do tempo
+    - População ao passar do tempo

@@ -5,11 +5,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.awt.*;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.List;
+import java.util.*;
 
 public class SpeciesBuilder {
   protected ArrayList<Specie> species = new ArrayList<>();
@@ -25,6 +24,13 @@ public class SpeciesBuilder {
         JSONObject specieJSON = (JSONObject) o;
         JSONArray genesJSON = (JSONArray) specieJSON.get("genes");
         Map<String, Integer> genes = new HashMap<>();
+        List specieColorJSON = ((JSONArray) specieJSON.get("color")).stream().toList();
+        int[] specieColor = new int[3];
+
+        for (int i=0; i < 3; i++) {
+          int c = ((Long) specieColorJSON.get(i)).intValue();
+          specieColor[i] = c;
+        }
 
         for (Object gene : genesJSON)
         {
@@ -35,10 +41,11 @@ public class SpeciesBuilder {
         }
 
         Specie specie = new Specie(
-                (String) specieJSON.get("name"),
-                ((Long) specieJSON.get("initial_amount")).intValue(),
-                ((Long) specieJSON.get("lifespan")).intValue(),
-                genes
+            (String) specieJSON.get("name"),
+            ((Long) specieJSON.get("initial_amount")).intValue(),
+            ((Long) specieJSON.get("lifespan")).intValue(),
+            genes,
+            new Color(specieColor[0], specieColor[1], specieColor[2])
         );
 
         species.add(specie);

@@ -1,3 +1,7 @@
+val lwjglVersion = "3.3.1"
+val lwjglNatives = "natives-windows"
+
+
 plugins {
     application
 }

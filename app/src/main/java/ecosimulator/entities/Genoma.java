@@ -23,7 +23,7 @@ public class Genoma {
         this.setFitness();
     }
 
-    public String getGeneSequenceString(String geneName) {
+    public int[] getGene(String geneName) {
         String gene = null;
 
         for (int i=0; i < this.genes.size() && gene == null; i++)
@@ -32,7 +32,16 @@ public class Genoma {
             if (actualGeneName.equals(geneName)) gene = actualGeneName;
         }
 
-        return this.geneToString(this.genes.get(geneName));
+        return this.genes.get(geneName);
+    }
+
+    public int getFactorsSum(String geneName) {
+      int[] gene = this.getGene(geneName);
+
+      if (gene == null)
+        return 0;
+
+      return Arrays.stream(gene).sum();
     }
 
     private String geneToString(int[] factors) {

@@ -22,15 +22,28 @@ public class SpeciesBuilder {
 
       for (Object o : speciesJSON) {
         JSONObject specieJSON = (JSONObject) o;
+
+        // Cor da espécie
+
+        JSONArray specieColorJSON = (JSONArray) specieJSON.get("color");
+        List<Integer> specieColor = new ArrayList<>();
+
+        for (Object c : specieColorJSON) specieColor.add( ((Long) c).intValue() );
+
+        // Predadores e presas
+
+        JSONArray speciePredatorsJSON = (JSONArray) specieJSON.get("predators");
+        List<String> speciePredators = new ArrayList<>();
+        JSONArray speciePreysJSON = (JSONArray) specieJSON.get("preys");
+        List<String> speciePreys = new ArrayList<>();
+
+        for (Object c : speciePredatorsJSON) speciePredators.add((String) c);
+        for (Object c : speciePreysJSON) speciePreys.add((String) c);
+
+        // Genes
+
         JSONArray genesJSON = (JSONArray) specieJSON.get("genes");
         Map<String, Integer> genes = new HashMap<>();
-        List specieColorJSON = ((JSONArray) specieJSON.get("color")).stream().toList();
-        int[] specieColor = new int[3];
-
-        for (int i=0; i < 3; i++) {
-          int c = ((Long) specieColorJSON.get(i)).intValue();
-          specieColor[i] = c;
-        }
 
         for (Object gene : genesJSON)
         {
@@ -40,12 +53,17 @@ public class SpeciesBuilder {
           genes.put(geneName, factorsQuantity);
         }
 
+        // Cria a espécie
+
         Specie specie = new Specie(
             (String) specieJSON.get("name"),
             ((Long) specieJSON.get("initial_amount")).intValue(),
             ((Long) specieJSON.get("lifespan")).intValue(),
+            ((Long) specieJSON.get("maturity_age")).intValue(),
             genes,
-            new Color(specieColor[0], specieColor[1], specieColor[2])
+            new Color(specieColor.get(0), specieColor.get(1), specieColor.get(2)),
+            speciePredators,
+            speciePreys
         );
 
         species.add(specie);

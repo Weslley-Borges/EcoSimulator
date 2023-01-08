@@ -1,7 +1,8 @@
 package ecosimulator.GUI;
 
 import ecosimulator.Simulation;
-import ecosimulator.entities.Organism;
+import ecosimulator.entities.Animal;
+import ecosimulator.interfaces.Status;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,19 @@ public class JPanelSimulation extends JPanel implements ActionListener {
   }
 
   public void update() {
-    s.individuals.forEach(Organism::moveRandomly);
+    s.days++;
+    s.individuals.forEach(Animal::run);
+
+    long deaths = s.individuals.stream().filter(i -> i.getStatus() == Status.DEAD).count();
+
+    s.individuals.removeIf(i -> i.getStatus() == Status.DEAD);
+    s.individuals.addAll(s.newBorns);
+
+    long saldo = s.newBorns.size() - deaths;
+
+    if (saldo != 0)
+      System.out.println(s.days +" - Saldo de natalidade = "+ saldo );
+    s.newBorns.clear();
   }
 
 

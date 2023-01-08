@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Population {
   private String specieName;
-  private List<Organism> individuals = new ArrayList<>();
+  private List<Animal> individuals = new ArrayList<>();
 
   public Population(String specieName) {
     this.specieName = specieName;
@@ -15,14 +15,14 @@ public class Population {
     return specieName;
   }
 
-  public List<Organism> getIndividuals() {
+  public List<Animal> getIndividuals() {
     return individuals;
   }
 
-  public void addIndividual(Organism individual) {
+  public void addIndividual(Animal individual) {
     this.individuals.add(individual);
   }
-  public void removeIndividual(Organism individual) {
+  public void removeIndividual(Animal individual) {
     this.individuals.remove(individual);
   }
 

@@ -1,4 +1,4 @@
-package interfaces;
+package ecosimulator.interfaces;
 
 public enum Status {
     NORMAL,

@@ -3,24 +3,30 @@
     {
       "name": "Wolf",
       "initial_amount": 10,
-      "lifespan": 30,
+      "lifespan": 300,
+      "maturity_age": 60,
       "genes": [
         {"Speed": 4 },
         {"Sight": 10 },
         {"Breed urge": 5 }
       ],
-      "color": [0,0,0]
+      "color": [0,0,0],
+      "preys": ["Rabbit"],
+      "predators": []
     },
     {
       "name": "Rabbit",
-      "initial_amount": 100,
-      "lifespan": 15,
+      "initial_amount": 30,
+      "lifespan": 250,
+      "maturity_age": 40,
       "genes": [
-        {"Speed": 6 },
-        {"Sight": 4 },
-        {"Breed urge": 10 }
+        {"Speed": 4 },
+        {"Sight": 6 },
+        {"Breed urge": 7 }
       ],
-      "color": [255,255,255]
+      "color": [255,255,255],
+      "preys": [],
+      "predators": ["Wolf"]
     }
   ]
 }

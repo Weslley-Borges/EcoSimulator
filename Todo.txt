@@ -1,7 +1,11 @@
-- Sistema de caça
-    - Algumas espécies vão predar outras
-    - As presas vão correr dos predadores
-    - Se a presa for alcançada, ela morre e vira alimento do predador
+- Grama
+    - Criar um organismo chamado "grama"
+        - Ao reproduzir, se espalha ao redor da planta-mãe
+        - Genes
+            - food
+            - root range
+        - Imóvel
+    - Os coelhos passarão a consumir a grama
 
 - Fome
     - A fome aumenta ao:

@@ -1,6 +1,6 @@
 package ecosimulator.helpers;
 
-import ecosimulator.entities.Specie;
+import ecosimulator.models.AnimalSpecie;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.*;
 
 public class SpeciesBuilder {
-  protected ArrayList<Specie> species = new ArrayList<>();
+  protected ArrayList<AnimalSpecie> species = new ArrayList<>();
   public SpeciesBuilder() {
     String data = Objects.requireNonNull(getClass().getClassLoader().getResource("Data.json")).getFile();
     JSONParser jsonParser = new JSONParser();
@@ -55,11 +55,12 @@ public class SpeciesBuilder {
 
         // Cria a espécie
 
-        Specie specie = new Specie(
+        AnimalSpecie specie = new AnimalSpecie(
             (String) specieJSON.get("name"),
             ((Long) specieJSON.get("initial_amount")).intValue(),
             ((Long) specieJSON.get("lifespan")).intValue(),
             ((Long) specieJSON.get("maturity_age")).intValue(),
+            ((Long) specieJSON.get("children")).intValue(),
             genes,
             new Color(specieColor.get(0), specieColor.get(1), specieColor.get(2)),
             speciePredators,
@@ -74,7 +75,7 @@ public class SpeciesBuilder {
     }
   }
 
-  public ArrayList<Specie> getSpecies() {
+  public ArrayList<AnimalSpecie> getSpecies() {
     return species;
   }
 }

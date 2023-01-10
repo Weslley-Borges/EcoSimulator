@@ -2,6 +2,7 @@ package ecosimulator.GUI;
 
 import ecosimulator.Simulation;
 import ecosimulator.entities.Animal;
+import ecosimulator.entities.Plant;
 import ecosimulator.interfaces.Status;
 
 import javax.swing.*;
@@ -12,6 +13,9 @@ import java.awt.event.ActionListener;
 public class JPanelSimulation extends JPanel implements ActionListener {
   Simulation s = Simulation.getInstance();
   Timer timer;
+  int passingDays = 0;
+  int deaths = 0;
+  int births = 0;
 
   public JPanelSimulation() {
     this.setPreferredSize(new Dimension(s.simulationWidth, s.simulationHeight));
@@ -37,20 +41,31 @@ public class JPanelSimulation extends JPanel implements ActionListener {
 
   public void update() {
     s.days++;
-    s.individuals.forEach(Animal::run);
+    passingDays++;
 
-    long deaths = s.individuals.stream().filter(i -> i.getStatus() == Status.DEAD).count();
+    if (passingDays % 10 == 0) {
+      System.out.println(s.days +" - Saldo de natalidade = "+ (births-deaths) +" - população: "+s.individuals.stream().filter(i -> i instanceof Animal).count());
+      passingDays = 0;
+      deaths = 0;
+      births = 0;
+    }
+
+    s.individuals.forEach(o -> {
+      if (o instanceof Animal)
+        ((Animal) o).run();
+      else if (o instanceof Plant)
+        ((Plant) o).run();
+    });
+
+    deaths += s.individuals.stream().filter(i -> i.getStatus() == Status.DEAD).count();
 
     s.individuals.removeIf(i -> i.getStatus() == Status.DEAD);
     s.individuals.addAll(s.newBorns);
 
-    long saldo = s.newBorns.size() - deaths;
+    births += s.newBorns.size();
 
-    if (saldo != 0)
-      System.out.println(s.days +" - Saldo de natalidade = "+ saldo );
     s.newBorns.clear();
   }
-
 
 
   @Override
@@ -58,6 +73,7 @@ public class JPanelSimulation extends JPanel implements ActionListener {
     super.paintComponent(g);
     Graphics2D g2 = (Graphics2D) g;
 
-    s.individuals.forEach(individual -> individual.draw(g2));
+    s.individuals.stream().filter(i -> i instanceof Plant).toList().forEach(i -> ((Plant) i).draw(g2));
+    s.individuals.stream().filter(i -> i instanceof Animal).toList().forEach(i -> ((Animal) i).draw(g2));
   }
 }

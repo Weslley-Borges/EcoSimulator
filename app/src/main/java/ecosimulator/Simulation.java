@@ -2,15 +2,18 @@ package ecosimulator;
 
 import ecosimulator.entities.Animal;
 import ecosimulator.entities.Genoma;
+import ecosimulator.entities.Plant;
 import ecosimulator.helpers.SpeciesBuilder;
+import ecosimulator.models.Organism;
+import ecosimulator.models.PlantSpecie;
 
-import java.util.ArrayList;
+import java.awt.*;
 import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Simulation {
-  public List<Animal> individuals = new ArrayList<>();
-  public List<Animal> newBorns = new ArrayList<>();
+  public List<Organism> individuals = new ArrayList<>();
+  public List<Organism> newBorns = new ArrayList<>();
   public static Simulation instance = null;
   public final int simulationHeight = 700;
   public final int simulationWidth = 700;
@@ -44,5 +47,24 @@ public class Simulation {
         individuals.add(new Animal(genoma, specie, xPosition, yPosition));
       }
     });
+
+    // Cria a grama
+
+    Map<String, Integer> genes = new HashMap<>();
+    genes.put("Food generation", 50);
+    genes.put("Food store", 100);
+
+    PlantSpecie grass = new PlantSpecie("Grass", genes, new Color(64, 190, 37));
+
+    for (int i=0; i < simulationWidth; i += tileSize)
+      for (int j=0; j < simulationHeight; j += tileSize)
+      {
+        List<String> geneNames = grass.getGenes().keySet().stream().toList();
+        List<Integer> valuesQuantities = grass.getGenes().values().stream().toList();
+
+        Genoma genoma = new Genoma(geneNames, valuesQuantities);
+        individuals.add(new Plant(genoma, grass, i, j));
+      }
+
   }
 }
